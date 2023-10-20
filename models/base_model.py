@@ -9,31 +9,30 @@ from agri_market import storage
 from uuid import uuid4
 
 class BaseModel:
+
     """BaseModel Class definition"""
+    
     def __init__(self, *args, **kwargs):
+
         """ Constructor """
 
-        for key, value in kwargs.items():
-            if key == "__class__":
-                continue
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "__class__":
+                    continue
 
-            if (key == "created_at" or key == "updated_at"):
-                value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if (key == "created_at" or key == "updated_at"):
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
 
             
-            setattr(self, key, value)
+                setattr(self, key, value)
 
-        if "id" not in kwargs.keys():
+        else:
             self.id = str(uuid4())
-
-        if "created_at" not in kwargs.keys():
             self.created_at = datetime.now()
-
-        if "updated_at" not in kwargs.keys():
             self.updated_at = datetime.now()
-
-        if len(kwargs) == 0:
             storage.new(self)
+
 
     def __str__(self):
         """ Define what should be printed for each instance of the class """
