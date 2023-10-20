@@ -160,8 +160,11 @@ class AMCommand(cmd.Cmd):
         except (NameError, SyntaxError):
             pass
 
-        setattr(instance, attr_name, value)
-        instance.save()
+        if hasattr(instance, attr_name):
+            setattr(instance, attr_name, value)
+            instance.save()
+        else:
+            print("** attribute doesn't exist **")
 
     def do_count(self, arg):
         """ Count instances of a specific class or all instances. """
