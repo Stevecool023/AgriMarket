@@ -5,7 +5,7 @@ BaseModel class that defines all common attributes/methods for other classes
 """
 
 from datetime import datetime
-from agri_market import storage
+from models import storage
 from uuid import uuid4
 
 class BaseModel:
