@@ -171,7 +171,7 @@ class AMCommand(cmd.Cmd):
                     arg_key = arg.replace(",", "")
                     part1_argv = arg_key.split()
                     for i in part1_argv[:2]:
-                        cmd_argv.append(i.replace(i.replace("\"", ""))
+                        cmd_argv.append(i.replace("\"", ""))
                     part2_argv = arg.split(", ")[1:]
                     for i in part2_argv:
                         cmd_argv.append(i.replace("\"", ""))
