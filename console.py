@@ -7,7 +7,7 @@ AgriMarket Console
 from models.user import User # Import User class
 from models.product import Product
 from models.equipment import Equipment
-from models.transactions import Transactions
+from models.transaction import Transaction
 from models import storage
 import cmd
 import sys
@@ -143,11 +143,12 @@ class AMCommand(cmd.Cmd):
         cmd_argv[1] = cmd_argv[1].replace("\"", "")
         key = cmd_argv[0] + '.' + cmd_argv[1]
 
-        if key all_objs.get(key, False):
+        if key in all_objs:
             all_objs.pop(key)
             storage.save()
         else:
             print("** no instance found **")
+
 
     def do_update(self, arg):
         """ Usage: update <class name> <id> <attribute name> <attribute value> """
@@ -170,7 +171,7 @@ class AMCommand(cmd.Cmd):
                     arg_key = arg.replace(",", "")
                     part1_argv = arg_key.split()
                     for i in part1_argv[:2]:
-                        cmd_argv.append(i.replace(i.replace("\"", ""))
+                        cmd_argv.append(i.replace("\"", ""))
                     part2_argv = arg.split(", ")[1:]
                     for i in part2_argv:
                         cmd_argv.append(i.replace("\"", ""))
