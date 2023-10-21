@@ -9,7 +9,7 @@ class FileStorage:
 
     """ Class that stores and loads instances to/from files in JSON format """
 
-    __file_path = "agri_market.json"
+    __file_path = "file.json"
     __objects = {}
 
     def all(self):
@@ -27,7 +27,7 @@ class FileStorage:
 
         for key, value in FileStorage.__objects.items():
             jdic[key] = value.to_dict()
-        with open(self.__file_path, "w", encoding="utf-8" as myfile:
+        with open(self.__file_path, "w", encoding="utf-8") as myfile:
                 json.dump(jdic, myfile)
 
     def reload(self):
@@ -38,8 +38,14 @@ class FileStorage:
         """
         try:
             with open(FileStorage.__file_path, encoding="utf-8") as myfile:
-                from models.agri_item import AgriItem # Replace with created class names
+                from models.base_model import BaseModel
+                from models.user import User
+                from models.equipment import Equipment
+                from models.product import Product
+                from models.transactions import Transactions # Replace with created class names
                 # Import other classes as needed
+
+
                 pobj = json.load(myfile)
                 for key, value in pobj.items():
                     clas = value["__class__"]
