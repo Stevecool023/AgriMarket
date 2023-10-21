@@ -61,27 +61,30 @@ class AMCommand(cmd.Cmd):
 
         if not cmd_argv:
             print("** class name missing **")
-            return None
+            return
+
+        class_name = cmd_argv[0]
+
 
         try:
-            eval(cmd_argv[0])
+            eval(class_name)
         except:
-            print("** class doesn't exist **")
-            return None
-
-        all_objs = storage.all()
+            print(f"** class {class_name} doesn't exist **")
+            return
 
         if len(cmd_argv) < 2:
-            print("** instance id missing **")
-            return None
+            print(f"** instance id missing **")
+            return
 
-        cmd_argv[1] = cmd_argv[1].replace("\"", "")
-        key = cmd_argv[0] + '.' + cmd_argv[1]
+        all_objs = storage.all()
+        instance_id = cmd_argv[1]
+        key = f"{class_name}.{instance_id}"
 
-        if all_objs.get(key, False):
+        
+        if key in all_objs:
             print(all_objs[key])
         else:
-            print("** no instance found **")
+            print(f"** no instance found **")
 
     def do_all(self, arg):
         """ Print all instances or all instances of a specific class. """
