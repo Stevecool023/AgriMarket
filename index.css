@@ -16,6 +16,8 @@ body {
     background-color: lightgreen; /* Background color for the navbar */
     overflow: hidden;
     justify-content: space-between;
+    position: sticky;
+    position: -webkit-sticky; 
 }
 
 /* Style for the navigation bar items */
@@ -36,4 +38,8 @@ li.navitem a {
 /* Style for the links on hover */
 li.navitem a:hover {
     background-color: brown; /* Background color on hover */
+}
+
+#heading2 {
+    font-style: italic;
 }
