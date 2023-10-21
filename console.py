@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 
 """
-Agricultural Website Console
+AgriMarket Console
 """
 
+from models.user import User # Import User class
+from models.product import Product
+from models.equipment import Equipment
+from models.transactions import Transactions
+from models import storage
 import cmd
 import sys
-from models import storage
 
 class AMCommand(cmd.Cmd):
     """ Class AMCommand to implement the command interpreter. """
     prompt = '(agrimarket) '
+    __all_117 = 0
 
     def emptyline(self):
         """ Do nothing on empty input. """
@@ -21,7 +26,11 @@ class AMCommand(cmd.Cmd):
         if not sys.stdin.isatty():
             print()
         if '.' in line:
+            AMCommand.__all_117 = 1
             line = line.replace('.', ' ').replace('(', ' ').replace(')', ' ')
+            cmd_argv = line.split()
+            cmd_argv[0], cmd_argv[1] = cmd_argv[1], cmd_argv[1]
+            line = " ".join(cmd_argv)
         return cmd.Cmd.precmd(self, line)
 
     def do_quit(self, arg):
@@ -37,37 +46,39 @@ class AMCommand(cmd.Cmd):
         """ Create an instance if the Model exists. """
         if not arg:
             print("** class name missing **")
-            return
+            return None
 
         try:
-            new_instance = eval(arg)()
-            new_instance.save()
-            print(new_instance.id)
-        except NameError:
+            my_model = eval(arg + "()")
+            my_model.save()
+            print(my_model.id)
+        except:
             print("** class doesn't exist **")
 
     def do_show(self, arg):
         """ Print the string representation of an instance based on ID. """
         cmd_argv = arg.split()
 
-        if not arg:
+        if not cmd_argv:
             print("** class name missing **")
-            return
+            return None
 
         try:
             eval(cmd_argv[0])
-        except NameError:
+        except:
             print("** class doesn't exist **")
-            return
+            return None
+
+        all_objs = storage.all()
 
         if len(cmd_argv) < 2:
             print("** instance id missing **")
-            return
+            return None
 
-        all_objs = storage.all()
+        cmd_argv[1] = cmd_argv[1].replace("\"", "")
         key = cmd_argv[0] + '.' + cmd_argv[1]
 
-        if key in all_objs:
+        if all_objs.get(key, False):
             print(all_objs[key])
         else:
             print("** no instance found **")
@@ -76,112 +87,171 @@ class AMCommand(cmd.Cmd):
         """ Print all instances or all instances of a specific class. """
         cmd_argv = arg.split()
 
-        if cmd_argv and cmd_argv[0] not in storage.classes:
-            print("** class doesn't exist **")
-            return
+        if cmd_argv:
+            try:
+                eval(cmd_argv[0])
+            except:
+                print("** class doesn't exist **")
+                return None
 
         all_objs = storage.all()
         print_list = []
+        len_objs = len(all_objs)
 
         for key, value in all_objs.items():
-            if not cmd_argv or cmd_argv[0] == value.__class__.__name__:
-                print_list.append(str(value))
+            if not cmd_argv:
+                if AMCommand.__all_117 == 0:
+                    print_list.append("\"" + str(value) + "\"")
+                else:
+                    print_list.append(str(value))
+
+            else:
+                check = key.split('.')
+                if cmd_argv[0] == check[0]:
+                    if AMCoommand.__all_117 == 0:
+                        print_list.append("\"" + str(value) + "\"")
+                    else:
+                        print_list.append(str(value))
 
         print("[", end="")
         print(", ".join(print_list), end="")
         print("]")
 
     def do_destroy(self, arg):
-        """ Deletes an instance based on its ID. """
+        """
+        Deletes an instance based on its ID and saves the changes
+        Usage: destroy <class name> <id>
+        """
         cmd_argv = arg.split()
 
-        if not arg:
+        if not cmd_argv:
             print("** class name missing **")
-            return
+            return None
 
         try:
             eval(cmd_argv[0])
-        except NameError:
+        except:
             print("** class doesn't exist **")
-            return
+            return None
+
+        all_objs = storage.all()
 
         if len(cmd_argv) < 2:
             print("** instance id missing **")
-            return
+            return None
         
-        all_objs = storage.all()
+        cmd_argv[1] = cmd_argv[1].replace("\"", "")
         key = cmd_argv[0] + '.' + cmd_argv[1]
 
-        if key in all_objs:
-            del all_objs[key]
+        if key all_objs.get(key, False):
+            all_objs.pop(key)
             storage.save()
         else:
             print("** no instance found **")
 
     def do_update(self, arg):
-        """ Updates an instance attribute or create it if it doesn't exist. """
-        cmd_argv = arg.split()
+        """ Usage: update <class name> <id> <attribute name> <attribute value> """
+        cmd_argv = []
+        part2_argv = []
+        is_dict = 0
+        if "\"" in arg:
+            if "," in arg:
+                if "{" in arg:
+                    is_dict = 1
+                    part1_argv = arg.split(",")[0].split()
+                    for i in part1_argv:
+                        cmd_argv.append(i.replace("\"", ""))
+                    part2_argv = arg.replace("}", "").split("{")[1].split(", ")
+                    for i in part2_argv:
+                        for j in i.split(": "):
+                            cmd_argv.append(j.replace("\"", "")
+                                            .replace('\'', ""))
+                else:
+                    arg_key = arg.replace(",", "")
+                    part1_argv = arg_key.split()
+                    for i in part1_argv[:2]:
+                        cmd_argv.append(i.replace(i.replace("\"", ""))
+                    part2_argv = arg.split(", ")[1:]
+                    for i in part2_argv:
+                        cmd_argv.append(i.replace("\"", ""))
+            else:
+                part1_argv = arg.split("\"")[0]
+                for i in part1_argv.split():
+                    cmd_argv.append(i)
+                part2_argv = arg.split("\"")[1:]
+                for i in part2_argv:
+                    if i != " " and i != "":
+                        cmd_argv.append(i.replace("\"", ""))
+        else:
+            part1_argv = arg.split()
+            for i in range(len(part1_argv)):
+                if i == 4:
+                    break
+                cmd_argv.append(part1_argv[i])
 
-        if not arg:
+        if (len(cmd_argv) == 0):
             print("** class name missing **")
-            return
+            return None
 
         try:
             eval(cmd_argv[0])
-        except NameError:
+        except:
             print("** class doesn't exist **")
-            return
+            return None
 
         if len(cmd_argv) < 2:
             print("** instance id missing **")
-            return
-
-        if len(cmd_argv) < 3:
-            print("** attribute name missing **")
-            return
-
-        if len(cmd_argv) < 4:
-            print("** value missing **")
-            return
+            return None
 
         all_objs = storage.all()
+
         key = cmd_argv[0] + '.' + cmd_argv[1]
+        if all_objs.get(key, False):
+            if (len(cmd_argv >= 3):
+                if (len(cmd_argv) % 2) == 0:
+                    for i in range(2, len(cmd_argv), 2):
+                        attr = cmd_argv[i]
+                        type_att = getattr(all_objs[key], cmd_argv[i], "")
+                        try:
+                            cast_val = type(type_att)(cmd_argv[i + 1])
+                        except:
+                            cast_val = type_att
+                        setattr(all_objs[key], cmd_argv[i], cast_val)
+                        all_objs[key].save()
+                        if is_dict == 0:
+                            break
 
-        if key not in all_objs:
-            print("** no instance found **")
-            return
-        
-        instance = all_objs[key]
-        attr_name = cmd_argv[2]
-        value = cmd_argv[3]
-
-        try:
-            value = eval(value)
-        except (NameError, SyntaxError):
-            pass
-
-        if hasattr(instance, attr_name):
-            setattr(instance, attr_name, value)
-            instance.save()
+                else:
+                    print("** value missing **")
+            else:
+                print("** attribute name missing **")
         else:
-            print("** attribute doesn't exist **")
+            print("** no instance found **")
+
 
     def do_count(self, arg):
-        """ Count instances of a specific class or all instances. """
+    """ Usage: count <class name> or <class name>.count() """
         cmd_argv = arg.split()
 
-        if not arg:
-            print(len(storage.all()))
-            return
+        if cmd_argv:
+            try:
+                eval(cmd_argv[0])
+            except:
+                print("** class doesn't exist **")
+                return None
 
-        if cmd_argv[0] in storage.classes:
-            count = 0
-            for key in storage.all():
-                if key.split('.')[0] == cmd_argv[0]:
+        all_objs = storage.all()
+        count = 0
+
+        for key, value in all_objs.items():
+            if not cmd_argv:
+                count += 1
+            else:
+                check = key.split('.')
+                if cmd_argv[0] == check[0]:
                     count += 1
-            print(count)
-        else:
-            print("** class doesn't exist **")
+        print(count)
+
 
 if __name__ == '__main__':
     AMCommand().cmdloop()
