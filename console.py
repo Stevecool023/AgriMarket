@@ -143,11 +143,12 @@ class AMCommand(cmd.Cmd):
         cmd_argv[1] = cmd_argv[1].replace("\"", "")
         key = cmd_argv[0] + '.' + cmd_argv[1]
 
-        if key all_objs.get(key, False):
+        if key in all_objs:
             all_objs.pop(key)
             storage.save()
         else:
             print("** no instance found **")
+
 
     def do_update(self, arg):
         """ Usage: update <class name> <id> <attribute name> <attribute value> """
