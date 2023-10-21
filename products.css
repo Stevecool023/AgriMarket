@@ -1,12 +1,26 @@
 
+/* Add CSS styles for the background image */
+body {
+    background-image: url('images/plate.jpg');
+    background-size: cover; /* Scale the image to cover the entire background */
+    background-repeat: no-repeat; /* Prevent image from repeating */
+    background-attachment: fixed; /* Keep the image fixed in the viewport */
+    background-position: center center; /* Center the image horizontally and vertically */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
 h1 {
     text-align: center;
+    size: 40px;
+    text-shadow: 0px 0px 4px white;
 }
 .product-listing {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: 20px;
+    margin: 15px;
+    background-color: whitesmoke;
+    padding: 0;
 }
 
 .product {
@@ -42,4 +56,9 @@ h1 {
 
 .product button:hover {
     background-color: #0056b3;
+}
+
+.quantity-input {
+    width: 60px;
+    text-align: center;
 }

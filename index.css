@@ -15,6 +15,7 @@ body {
     padding: 0;
     background-color: lightgreen; /* Background color for the navbar */
     overflow: hidden;
+    justify-content: space-between;
 }
 
 /* Style for the navigation bar items */
