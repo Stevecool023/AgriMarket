@@ -227,25 +227,29 @@ class AMCommand(cmd.Cmd):
 
     def do_count(self, arg):
         """ Usage: count <class name> or <class name>.count() """
+        """ Retrieve the number of instances of a class """
         cmd_argv = arg.split()
 
-        if cmd_argv:
-            try:
-                eval(cmd_argv[0])
-            except:
-                print("** class doesn't exist **")
-                return None
+        if not cmd_argv:
+            print("** class name missing **")
+            return
+
+
+        try:
+            eval(cmd_argv[0])
+        except:
+            print("** class doesn't exist **")
+            return
 
         all_objs = storage.all()
         count = 0
 
-        for key, value in all_objs.items():
-            if not cmd_argv:
-                count += 1
-            else:
-                check = key.split('.')
-                if cmd_argv[0] == check[0]:
-                    count += 1
+        if len(mcd_argv) > 1:
+            class_name = cmd_argv[0]
+            count = sum(1 for key in all_objs if key.startswith(class_name + "."))
+        else:
+            print("** class name missing **")
+            return
         print(count)
 
 
