@@ -42,7 +42,7 @@ class FileStorage:
                 from models.user import User
                 from models.equipment import Equipment
                 from models.product import Product
-                from models.transactions import Transactions # Replace with created class names
+                from models.transactions import Transactions
                 # Import other classes as needed
 
 
