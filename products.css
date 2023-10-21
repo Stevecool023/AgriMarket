@@ -18,7 +18,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: 15px;
+    margin: 5px;
     background-color: whitesmoke;
     padding: 0;
 }
