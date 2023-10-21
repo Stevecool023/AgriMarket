@@ -87,31 +87,26 @@ class AMCommand(cmd.Cmd):
         """ Print all instances or all instances of a specific class. """
         cmd_argv = arg.split()
 
-        if cmd_argv:
-            try:
-                eval(cmd_argv[0])
-            except:
-                print("** class doesn't exist **")
-                return None
+        if not cmd_argv:
+            print("** class name missing **")
+            return None
+
+        try:
+            eval(cmd_argv[0])
+        except:
+            print("** class doesn't exist **")
+            return None
 
         all_objs = storage.all()
         print_list = []
         len_objs = len(all_objs)
 
-        for key, value in all_objs.items():
-            if not cmd_argv:
-                if AMCommand.__all_117 == 0:
-                    print_list.append("\"" + str(value) + "\"")
-                else:
-                    print_list.append(str(value))
+        if len(cmd_argv) > 1:
+            class_name = cmd_argv[0]
+            print_list = [str(value) for key, value in all_objs.items() if key.startswith(class_name + ".")]
+        else:
+            print_list = [str(value) for value in all_objs.values()]
 
-            else:
-                check = key.split('.')
-                if cmd_argv[0] == check[0]:
-                    if AMCoommand.__all_117 == 0:
-                        print_list.append("\"" + str(value) + "\"")
-                    else:
-                        print_list.append(str(value))
 
         print("[", end="")
         print(", ".join(print_list), end="")
@@ -208,7 +203,7 @@ class AMCommand(cmd.Cmd):
 
         key = cmd_argv[0] + '.' + cmd_argv[1]
         if all_objs.get(key, False):
-            if (len(cmd_argv >= 3):
+            if len(cmd_argv) >= 3:
                 if (len(cmd_argv) % 2) == 0:
                     for i in range(2, len(cmd_argv), 2):
                         attr = cmd_argv[i]
@@ -231,7 +226,7 @@ class AMCommand(cmd.Cmd):
 
 
     def do_count(self, arg):
-    """ Usage: count <class name> or <class name>.count() """
+        """ Usage: count <class name> or <class name>.count() """
         cmd_argv = arg.split()
 
         if cmd_argv:
