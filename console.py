@@ -7,7 +7,7 @@ AgriMarket Console
 from models.user import User # Import User class
 from models.product import Product
 from models.equipment import Equipment
-from models.transactions import Transactions
+from models.transaction import Transaction
 from models import storage
 import cmd
 import sys
