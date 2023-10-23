@@ -38,18 +38,19 @@ class FileStorage:
         """
         try:
             with open(FileStorage.__file_path, encoding="utf-8") as myfile:
-                from models.base_model import BaseModel
-                from models.user import User
-                from models.equipment import Equipment
-                from models.product import Product
-                from models.transactions import Transactions
-                # Import other classes as needed
-
-
                 pobj = json.load(myfile)
                 for key, value in pobj.items():
                     clas = value["__class__"]
-                    obj = eval(clas + "(**value)")
+                    if clas == "BaseModel":
+                        obj = BaseModel(**value)
+                    elif clas == "User":
+                        obj = User(**value)
+                    elif clas == "Equipment":
+                        obj = Equipment(**value)
+                    elif clas == "Product":
+                        obj = Product(**value)
+                    elif clas == "Transaction":
+                        obj = Transaction(**value)
                     FileStorage.__objects[key] = obj
         except IOError:
             pass

@@ -4,6 +4,7 @@ BaseModel class that defines all common attributes/methods for other classes
 
 """
 
+from models import storage # Import storage here if needed
 from datetime import datetime
 from models import storage
 from uuid import uuid4
