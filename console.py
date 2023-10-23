@@ -4,13 +4,14 @@
 AgriMarket Console
 """
 
+import sys
+sys.path.append('/home/AgriMarket')
+from models import storage # Import storage first
 from models.user import User # Import User class
 from models.product import Product
 from models.equipment import Equipment
 from models.transaction import Transaction
-from models import storage
 import cmd
-import sys
 
 class AMCommand(cmd.Cmd):
     """ Class AMCommand to implement the command interpreter. """
@@ -92,17 +93,16 @@ class AMCommand(cmd.Cmd):
 
         if not cmd_argv:
             print("** class name missing **")
-            return None
+            return
 
-        try:
-            eval(cmd_argv[0])
-        except:
-            print("** class doesn't exist **")
-            return None
+        class_name = cmd_argv[0]
+
+        if class_name not in class_map:
+            print(f"** class {class_name} doesn't exist **")
+            return
 
         all_objs = storage.all()
         print_list = []
-        len_objs = len(all_objs)
 
         if len(cmd_argv) > 1:
             class_name = cmd_argv[0]
@@ -222,13 +222,38 @@ class AMCommand(cmd.Cmd):
         all_objs = storage.all()
         count = 0
 
-        if len(mcd_argv) > 1:
+        if len(cmd_argv) > 1:
             class_name = cmd_argv[0]
             count = sum(1 for key in all_objs if key.startswith(class_name + "."))
         else:
             print("** class name missing **")
             return
         print(count)
+
+
+    def do_help(self, arg):
+        """
+        List available commands with 'help' or provide detailed help for a specific command.
+        Usage:
+            help                    - List all available commands.
+            help <command>          - Display detailed help for a specific command.
+
+        Args:
+            arg (str): The command name for which you want to see detailed help.
+        """
+        if arg:
+            # show help for a specific command
+            try:
+                doc = getattr(self, "help_" + arg)
+                print(doc.__doc__)
+            except AttributeError:
+                print(f"No help available for '{arg}'")
+        else:
+            # List all available commands
+            documented_commands = [name[3:] for name in dir(self) if name.startswith('do_')]
+            documented_commands.sort()
+            self.stdout.write("Documented commands (type help <command> for details):\n")
+            self.stdout.write(", ".join(documented_commands) + '\n')
 
 
 if __name__ == '__main__':

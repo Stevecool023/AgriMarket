@@ -3,6 +3,11 @@
 """ Module for serializing and deserializing instances to JSON and keeping storage of instances
 """
 import json
+from models.base_model import BaseModel
+from models.user import User
+from models.equipment import Equipment
+from models.product import Product
+from models.transaction import Transaction
 
 
 class FileStorage:
@@ -41,16 +46,7 @@ class FileStorage:
                 pobj = json.load(myfile)
                 for key, value in pobj.items():
                     clas = value["__class__"]
-                    if clas == "BaseModel":
-                        obj = BaseModel(**value)
-                    elif clas == "User":
-                        obj = User(**value)
-                    elif clas == "Equipment":
-                        obj = Equipment(**value)
-                    elif clas == "Product":
-                        obj = Product(**value)
-                    elif clas == "Transaction":
-                        obj = Transaction(**value)
+                    obj = eval(clas)(**value)
                     FileStorage.__objects[key] = obj
         except IOError:
             pass
