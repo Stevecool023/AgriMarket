@@ -231,5 +231,18 @@ class AMCommand(cmd.Cmd):
         print(count)
 
 
+    def do_help(self, arg):
+        """ List available commands with 'help' or detailed help with 'help cmd'. """
+        if arg:
+            # show help for a specific command
+            super().do_help(arg)
+        else:
+            # List all available commands
+            documented_commands = [name[3:] for name in dir(self) if name.startswith('do_')]
+            documented_commands.sort()
+            self.stdout.write("Documented commands (type help <topic>):\n")
+            self.stdout.write(", ".join(documented_commands) + '\n')
+
+
 if __name__ == '__main__':
     AMCommand().cmdloop()
