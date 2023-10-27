@@ -7,8 +7,24 @@ BaseModel class that defines all common attributes/methods for other classes
 # Import storage here if needed
 from datetime import datetime
 from uuid import uuid4
+import models
+
+if models.storage_t == "db":
+    from sqlalchemy import Column, String, DateTime
+    from sqlalchemy.ext.declarative import declarative_base
+    Base = declarative_base()
+else:
+    Base = object
+
 
 class BaseModel:
+    if models.storage_t == "db":
+        id = Column(String(60), primary_key=True, nullable=False)
+        created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+        updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    # Update the to_dict() method as mentioned in the initial instructions.
+    # Add teh delete() method as described in the initial instructions.
 
     """BaseModel Class definition"""
     
