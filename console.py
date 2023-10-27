@@ -5,7 +5,7 @@ AgriMarket Console
 """
 
 import sys
-sys.path.append('/home/AgriMarket')
+sys.path.append('/home/AgriMarket/backend')
 from models import storage # Import storage first
 from models.user import User # Import User class
 from models.product import Product
@@ -44,17 +44,39 @@ class AMCommand(cmd.Cmd):
         return True
 
     def do_create(self, arg):
-        """ Create an instance if the Model exists. """
+        """ Create an object of any class with optional parameters. """
         if not arg:
             print("** class name missing **")
-            return None
+            return
 
-        try:
-            my_model = eval(arg + "()")
-            my_model.save()
-            print(my_model.id)
-        except:
+        # Split the arguments into class name and parameters
+        args = arg.split()
+        class_name = args[0]
+
+        if class_name not in AMCommand.classes:
             print("** class doesn't exist **")
+            return
+
+        params = {}
+        for param in args[1:]:
+            try:
+                key, value = param.split('=')
+                # Process the value to handle different types
+                if value.startswith('"'):
+                    value = value[1:].replace("_", " ")
+                elif '.' in value:
+                    value = float(value)
+                else:
+                    value = int(value)
+                params[key] = value
+            except ValueError:
+                pass
+
+        new_instance = AMCommand.classes[class_name](**params)
+        new_instance.save()
+        print(new_instance.id)
+
+
 
     def do_show(self, arg):
         """ Print the string representation of an instance based on ID. """
