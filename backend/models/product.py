@@ -20,3 +20,5 @@ class Product(BaseModel, Base):
         price = Column(Float, nullable=False)
         category = Column(String(128), nullable=True)
         location = Column(String(128), nullable=True)
+        user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+        user = relationship('User', back_populates='products')
