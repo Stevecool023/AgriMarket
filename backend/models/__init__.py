@@ -2,6 +2,7 @@
 
 """ Module to create a unique FileStorage instance for the application """
 
+import models
 from os import getenv
 # from models.engine.file_storage import FileStorage
 
