@@ -5,7 +5,7 @@ Product class that inherits from BaseModel
 """
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Float, Integer, ForeignKey
+from sqlalchemy import ForeignKey, Column, String, Float, Integer
 from sqlalchemy.orm import relationship
 
 
@@ -21,4 +21,4 @@ class Product(BaseModel, Base):
         category = Column(String(128), nullable=True)
         location = Column(String(128), nullable=True)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
-        user = relationship('User', back_populates='products')
+        user = relationship('User', backref='products')
