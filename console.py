@@ -14,6 +14,13 @@ from models.transaction import Transaction
 import cmd
 
 class AMCommand(cmd.Cmd):
+    class_map = {
+        "User": User, 
+        "Product": Product,
+        "Equipment": Equipment,
+        "Transaction": Transaction,
+    }
+        
     """ Class AMCommand to implement the command interpreter. """
     prompt = '(agrimarket) '
     __all_117 = 0
@@ -26,12 +33,6 @@ class AMCommand(cmd.Cmd):
         """ Edit given command to allow a second type of input. """
         if not sys.stdin.isatty():
             print()
-        if '.' in line:
-            AMCommand.__all_117 = 1
-            line = line.replace('.', ' ').replace('(', ' ').replace(')', ' ')
-            cmd_argv = line.split()
-            cmd_argv[0], cmd_argv[1] = cmd_argv[1], cmd_argv[1]
-            line = " ".join(cmd_argv)
         return cmd.Cmd.precmd(self, line)
 
     def do_quit(self, arg):
@@ -53,7 +54,7 @@ class AMCommand(cmd.Cmd):
         args = arg.split()
         class_name = args[0]
 
-        if class_name not in AMCommand.classes:
+        if class_name not in self.class_map:
             print("** class doesn't exist **")
             return
 
@@ -214,9 +215,9 @@ class AMCommand(cmd.Cmd):
             instance = all_objs[key]
 
             if isinstance(dictionary, dict):
-                for key, value in dictionary.items():
-                    if hasattr(instance, key):
-                        setattr(instance, key, value)
+                for attr, value in dictionary.items():
+                    if hasattr(instance, attr):
+                        setattr(instance, attr, value)
                 instance.save()
             else:
                 print(f"** no instance found **")

@@ -13,8 +13,7 @@ from sqlalchemy.orm import relationship
 class Transaction(BaseModel, Base):
     """ Class that defines attributes for agricultural transactions. """
     if models.storage_t == 'db':
-         __tablename__ = 'transactions'
-
+        __tablename__ = 'transactions'
         product_id = Column(String(60), ForeignKey('products.id'), nullable=True)
         equipment_id = Column(String(60), ForeignKey('equipment.id'), nullable=True)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
