@@ -11,7 +11,7 @@ from sqlalchemy.orm import relationship
 
 
 class Transaction(BaseModel, Base):
-    """ Class that defines attributes for agricultural transactions """
+    """ Class that defines attributes for agricultural transactions. """
     if models.storage_t == 'db':
          __tablename__ = 'transactions'
 
