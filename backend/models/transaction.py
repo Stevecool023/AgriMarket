@@ -24,4 +24,4 @@ class Transaction(BaseModel, Base):
         # Define relationships to connect transactions with products, equipment, buyers, and owners
         product = relationship('Product', foreign_keys='Transaction.product_id', backref='transactions')
         equipment = relationship('Equipment', foreign_keys='Transaction.equipment_id', backref='transactions')
-        user = relationship('User', foreign_keys='Transaction.user', back_ref='transactions')
+        user = relationship('User', foreign_keys='Transaction.user', backref='transactions')
