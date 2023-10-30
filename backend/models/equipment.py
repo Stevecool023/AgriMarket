@@ -6,7 +6,7 @@ Equipment class that inherits from BaseModel
 
 import models
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Float, Integer, ForeignKey
+from sqlalchemy import ForeignKey, Column, String, Float, Integer
 from sqlalchemy.orm import relationship
 
 
