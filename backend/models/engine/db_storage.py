@@ -24,7 +24,7 @@ class DBStorage:
         SCOOL_MYSQL_USER = getenv('SCOOL_MYSQL_USER')
         SCOOL_MYSQL_PWD = getenv('SCOOL_MYSQL_PWD')
         SCOOL_MYSQL_HOST = getenv('SCOOL_MYSQL_HOST')
-        SCOOL_MYSQL_DB getenv('SCOOL_MYSQL_DB')
+        SCOOL_MYSQL_DB = getenv('SCOOL_MYSQL_DB')
         SCOOL_ENV = getenv('SCOOL_ENV')
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                         format(SCOOL_MYSQL_USER,
@@ -60,6 +60,7 @@ class DBStorage:
 
     def reload(self):
         """ Reload data from the database """
+        from models.base_model import Base
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_scoped_session(sess_factory)
